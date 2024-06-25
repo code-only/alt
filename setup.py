@@ -1,24 +1,16 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='alt',
-    version='0.1.0',
-    author='Aman Srivastava',
-    author_email='credevator@outlook.com',
-    description='A CLI tool for local development',
-    long_description=open('README.md').read(),
-    long_description_content_type='text/markdown',
-    url='https://github.com/code-only/alt',
+    name='alt-cli',
+    version='0.2',
     packages=find_packages(),
-    entry_points={
-        'console_scripts': [
-            'alt=cli:cmd',
-        ],
-    },
-    classifiers=[
-        'Programming Language :: Python :: 3',
-        'License :: OSI Approved :: MIT License',
-        'Operating System :: OS Independent',
+    include_package_data=True,
+    install_requires=[
+        'click',
+        'pyyaml',
     ],
-    python_requires='>=3.6',
+    entry_points='''
+        [console_scripts]
+        alt=alt.cli:cli
+    ''',
 )

@@ -1,0 +1,4 @@
+enabled_commands:
+  drupal: true
+  wordpress: true
+  custom: true
