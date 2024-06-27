@@ -1,6 +1,5 @@
 import shutil
 import click
-from .groups.new import new
 from rich.console import Console
 import subprocess
 import os
@@ -16,13 +15,6 @@ def wordpress():
 def update_plugins():
     """Update WordPress plugins."""
     click.echo('WordPress plugins updated.')
-
-@new.command()
-@click.option('--version', default='latest', help='WordPress version to setup. Default is "latest".')
-@click.option('--folder', default='wordpress', help='Folder name for the new WordPress project. Default is "wordpress".')
-def wordpress_project(version, folder):
-    """Create Wordpress Site."""
-    create_new_wordpress(version, folder)
 
 @wordpress.command()
 @click.option('--version', default='latest', help='WordPress version to setup. Default is "latest".')

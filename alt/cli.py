@@ -4,10 +4,8 @@ import click
 import yaml
 import subprocess
 from rich.console import Console
-from alt.commands.drupal import drupal
-from alt.commands.wordpress import wordpress
-#from .commands.groups import groups
-from alt.commands.groups.new import new
+from alt.commands import *
+
 
 console = Console()
 
@@ -28,17 +26,30 @@ config = load_config()
 
 @click.group()
 def cli():
-    console.print(f"[bold green]Advanced Local development Tool![/bold green]")
+    banner = f"""[bold yellow]
+     █████╗ ██╗  ████████╗
+    ██╔══██╗██║  ╚══██╔══╝
+    ███████║██║     ██║   
+    ██╔══██║██║     ██║   
+    ██║  ██║███████╗██║   
+    ╚═╝  ╚═╝╚══════╝╚═╝ [/bold yellow]"""
+
+    console.print(banner)          
+    console.print(f"[bold green]    Advanced Local Toolkit![/bold green]")
     pass
 
-cli.add_command(new)
+commands = [
+    ('drupal', True),
+    ('wordpress', False),
+    ('laravel', True),
+    ('magento', False),
+    ('acquia', True)
+]
 
 # Conditional command group registration based on config
-if config.get('enabled_commands', {}).get('drupal', True):  # Default to True
-    cli.add_command(drupal)
-
-if config.get('enabled_commands', {}).get('wordpress', False):
-    cli.add_command(wordpress)
+for command, default_enabled in commands:
+    if config.get('enabled_commands', {}).get(command, default_enabled):
+        cli.add_command(locals()[command])
 
 # Custom command loader
 # Scans `.alt/commands` directory for .py or .sh scripts to load as commands.
