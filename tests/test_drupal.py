@@ -1,19 +1,22 @@
+import subprocess
+from unittest.mock import patch
+
 import pytest
 from click.testing import CliRunner
-from unittest.mock import patch
-import subprocess
-import os
 
 from alt.commands.drupal import drupal
+
 
 @pytest.fixture
 def runner():
     return CliRunner()
 
+
 def test_cache_clear(runner):
     result = runner.invoke(drupal, ['cache_clear'])
     assert result.exit_code == 0
     assert 'Drupal cache cleared.' in result.output
+
 
 @patch('alt.commands.drupal.subprocess.run')
 @patch('os.chdir')

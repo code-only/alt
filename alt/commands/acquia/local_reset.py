@@ -1,5 +1,7 @@
-import click
 import subprocess
+
+import click
+
 
 @click.command()
 def local_reset_command():
@@ -11,6 +13,7 @@ def local_reset_command():
         click.echo("Local Acquia environment reset successfully.")
     except subprocess.CalledProcessError as e:
         click.echo(f"Failed to reset local environment: {e}", err=True)
+
 
 if __name__ == "__main__":
     local_reset_command()

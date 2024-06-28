@@ -1,8 +1,11 @@
 # ALT: Advanced Local Toolkit
 
-ALT (Advanced Local Toolkit) is a powerful tool that streamlines local development workflows by providing an easy-to-use CLI for managing projects, especially for Drupal. It offers configurable command registration and supports custom command additions.
+ALT (Advanced Local Toolkit) is a powerful tool that streamlines local development workflows by providing an easy-to-use
+CLI for managing projects, especially for Drupal. It offers configurable command registration and supports custom
+command additions.
 
 ## Features
+
 - **Drupal Commands**: Set up and manage Drupal projects effortlessly.
 - **WordPress Commands**: Integrate WordPress management (optional).
 - **Custom Command Loader**: Load custom commands from `.py` or `.sh` scripts.
@@ -27,7 +30,9 @@ ALT (Advanced Local Toolkit) is a powerful tool that streamlines local developme
 
 ## Configuration
 
-ALT uses a configuration file to determine which command groups are enabled. The configuration file should be in YAML format and located at `.alt/config.yaml` in your project directory. Alternatively, a default configuration can be placed in `config.yaml` at the root of the repository.
+ALT uses a configuration file to determine which command groups are enabled. The configuration file should be in YAML
+format and located at `.alt/config.yaml` in your project directory. Alternatively, a default configuration can be placed
+in `config.yaml` at the root of the repository.
 
 Example configuration:
 
@@ -66,7 +71,7 @@ If enabled, the Drupal command group provides a set of commands to manage your D
     python alt/cli.py drupal new --version 10.3 --folder my_drupal_project
     ```
 
-    This command sets up a new Drupal project with the specified version and folder name.
+   This command sets up a new Drupal project with the specified version and folder name.
 
 2. **Clear Drupal Cache**
 
@@ -74,7 +79,7 @@ If enabled, the Drupal command group provides a set of commands to manage your D
     python alt/cli.py drupal cache_clear
     ```
 
-    This command clears the Drupal cache.
+   This command clears the Drupal cache.
 
 3. **Drupal Project Report**
 
@@ -82,7 +87,7 @@ If enabled, the Drupal command group provides a set of commands to manage your D
     python alt/cli.py drupal report
     ```
 
-    This command provides a report on the Drupal project.
+   This command provides a report on the Drupal project.
 
 ### Custom Commands
 

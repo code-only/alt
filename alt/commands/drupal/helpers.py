@@ -1,10 +1,12 @@
 import os
 import subprocess
+
 from rich.console import Console
 
 console = Console()
 
-def check_drush_availability(cwd = os.getcwd(), environment = None):
+
+def check_drush_availability(cwd=os.getcwd(), environment=None):
     """Check if drush is available as a CLI command."""
     try:
         # Check if drush works directly

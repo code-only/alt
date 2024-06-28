@@ -1,5 +1,7 @@
-import click
 import subprocess
+
+import click
+
 
 @click.command()
 @click.argument('machinename')
@@ -13,6 +15,6 @@ def local_sync_command(machinename):
     except subprocess.CalledProcessError as e:
         click.echo(f"Failed to sync environment: {e}", err=True)
 
+
 if __name__ == '__main__':
     local_sync_command()
- 

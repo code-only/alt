@@ -1,8 +1,10 @@
-import os
-import subprocess
 import json
-import click
+import os
 import re
+import subprocess
+
+import click
+
 
 def is_composer_installed():
     """Check if Composer is installed."""
@@ -11,6 +13,7 @@ def is_composer_installed():
         return result.returncode == 0
     except FileNotFoundError:
         return False
+
 
 def install_composer():
     """Install Composer globally."""
@@ -28,6 +31,7 @@ def install_composer():
         click.echo(f"Failed to install Composer: {e}")
         return False
 
+
 def ensure_composer_installed():
     """Ensure Composer is installed; install it if it's not."""
     if not is_composer_installed():
@@ -39,6 +43,7 @@ def ensure_composer_installed():
     else:
         click.echo("Composer is already installed.")
 
+
 def add_package(package, version=None, with_dependencies=False):
     """Add a Composer package, with option to include a specific version and dependencies."""
     try:
@@ -49,13 +54,14 @@ def add_package(package, version=None, with_dependencies=False):
             command.append(package)
         if with_dependencies:
             command.append("--with-all-dependencies")
-        
+
         subprocess.run(command, check=True)
         version_info = f"version: {version}" if version else "latest version"
         click.echo(f"Successfully added package: {package} ({version_info}, with dependencies: {with_dependencies})")
     except subprocess.CalledProcessError as e:
         version_info = f"version: {version}" if version else "latest version"
         click.echo(f"Failed to add package: {package} ({version_info}, with dependencies: {with_dependencies}) - {e}")
+
 
 def remove_package(package):
     """Remove a Composer package."""
@@ -66,6 +72,7 @@ def remove_package(package):
     except subprocess.CalledProcessError as e:
         click.echo(f"Failed to remove package: {e}")
 
+
 def is_package_installed(package):
     """Check if a package is installed."""
     try:
@@ -73,6 +80,7 @@ def is_package_installed(package):
         return result.returncode == 0
     except subprocess.CalledProcessError:
         return False
+
 
 def get_dependencies():
     """Get list of installed packages and their dependencies."""
@@ -82,6 +90,7 @@ def get_dependencies():
     except subprocess.CalledProcessError as e:
         click.echo(f"Failed to get dependencies: {e}")
         return None
+
 
 def print_dependencies():
     """Print installed packages and their dependencies in a readable format."""
@@ -98,6 +107,7 @@ def print_dependencies():
                 print(f"    - {dep} ({version})")
         click.echo("\n")
 
+
 def load_composer_json(filepath='composer.json'):
     """Load composer.json file."""
     if not os.path.exists(filepath):
@@ -111,10 +121,12 @@ def load_composer_json(filepath='composer.json'):
             click.echo(f"Failed to load JSON from {filepath}: {e}")
             return None
 
+
 def save_composer_json(data, filepath='composer.json'):
     """Save changes to composer.json file."""
     with open(filepath, 'w') as file:
         json.dump(data, file, indent=4)
+
 
 def add_patch(package, patch_description, patch_url):
     """Add a patch to composer.json."""
@@ -128,7 +140,7 @@ def add_patch(package, patch_description, patch_url):
         composer_data['extra']['patches'] = {}
 
     patches_section = composer_data['extra']['patches']
-    
+
     if patch_exists(patches_section, package, patch_description):
         print(f"Patch already exists for {package} with description: '{patch_description}'")
         return
@@ -141,6 +153,7 @@ def add_patch(package, patch_description, patch_url):
     save_composer_json(composer_data)
 
     print(f"Added patch for {package}: {patch_description} -> {patch_url}")
+
 
 def remove_patch(package, patch_url):
     """Remove a patch from composer.json."""
@@ -169,11 +182,13 @@ def remove_patch(package, patch_url):
         save_composer_json(composer_data)
         click.echo(f"Removed patch for {package}.")
 
+
 def patch_exists(patches_section, package, patch_description):
     """Check if a patch already exists for a package."""
     if package in patches_section and patch_description in patches_section[package]:
         return True
     return False
+
 
 def is_patch_installed(package, patch_url):
     """Verify if a patch is already installed."""
@@ -197,6 +212,7 @@ def is_valid_package(package):
     pattern = r'^[a-z0-9\-]+/[a-z0-9\-]+$'
     return re.match(pattern, package) is not None
 
+
 def update_lock():
     """Update the Composer lock file."""
     try:
@@ -205,6 +221,7 @@ def update_lock():
         click.echo("Successfully updated the composer.lock file.")
     except subprocess.CalledProcessError as e:
         click.echo(f"Failed to update the composer.lock file: {e}")
+
 
 # Example usage
 if __name__ == "__main__":
@@ -222,4 +239,3 @@ if __name__ == "__main__":
             click.echo("Patch removed.")
     else:
         click.echo(f"Invalid package name: {package}")
-

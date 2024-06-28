@@ -1,35 +1,16 @@
 import os
-import sys
+
 import click
 import yaml
-import subprocess
 from rich.console import Console
+
+import alt
+from alt.helpers import load_custom_commands, load_config
 from alt.commands import *
-from alt.helpers import load_custom_commands
 
 console = Console()
-
-def load_config():
-    # Define config paths
-    paths = [
-        os.path.join(os.path.dirname(__file__), '..', 'config'),  # Lowest priority without extension
-        os.path.expanduser('~/.alt/config'),            # Middle priority without extension
-        os.path.join(os.getcwd(), '.alt', 'config')     # Highest priority without extension
-    ]
-    
-    config = {}
-    for base_path in paths:
-        for ext in ['.yaml', '.yml']:
-            path = base_path + ext
-            if os.path.exists(path):
-                with open(path, 'r') as f:
-                    new_config = yaml.safe_load(f)
-                    config.update(new_config or {})
-                    print(config)
-    return config
-
-# Load user configuration
 config = load_config()
+
 
 @click.group()
 def cli():
@@ -42,17 +23,20 @@ def cli():
     ╚═╝  ╚═╝╚══════╝╚═╝ 
     [/bold yellow]"""
 
-    console.print(banner)          
+    console.print(banner)
     console.print(f"[bold yellow]    Advanced Local Toolkit![/bold yellow]")
     pass
 
+
 commands = [
     ('drupal', True),
-    ('wordpress', False),
+    ('wordpress', True),
     ('laravel', True),
     ('magento', False),
     ('acquia', True)
 ]
+
+cli.add_command(alt.commands.command)
 
 # Conditional command group registration based on config
 for command, default_enabled in commands:

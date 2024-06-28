@@ -1,8 +1,12 @@
+import subprocess
+
 import click
 from rich.console import Console
-import subprocess
+
 from alt.helpers.package import composer
+
 console = Console()
+
 
 @click.command()
 @click.option('--version', default='10.3', help='Drupal version to set up. Default is 10.3.')
@@ -12,6 +16,7 @@ def drupal_project_command(version, folder):
     click.echo(f"Starting new Drupal {version} project")
     create_new_drupal(version, folder)
 
+
 @click.command()
 @click.option('--version', default='10.3', help='Drupal version to set up. Default is 10.3.')
 @click.option('--folder', default='drupal', help='Folder name for the new Drupal project. Default is "drupal".')
@@ -19,6 +24,7 @@ def new_command(version, folder):
     """Create new Drupal Project"""
     click.echo(f"Starting new Drupal {version} project")
     create_new_drupal(version, folder)
+
 
 def create_new_drupal(version, folder):
     composer.ensure_composer_installed()

@@ -1,14 +1,16 @@
-import click
 import subprocess
-import os
+
+import click
 from rich.console import Console
 
 console = Console()
+
 
 @click.group()
 def laravel():
     """Commands related to Laravel."""
     pass
+
 
 @laravel.command()
 @click.option('--version', default='8.x', help='Laravel version to setup. Default is 8.x.')
@@ -16,6 +18,7 @@ def laravel():
 def new(version, folder):
     """Create new Laravel project."""
     create_new_laravel_project(version, folder)
+
 
 def create_new_laravel_project(version, folder):
     console.print(f"[bold blue]Installing Laravel {version} in folder {folder}...[/bold blue]")
@@ -34,6 +37,7 @@ def artisan(command):
         subprocess.run(['php', 'artisan', command], check=True)
     except subprocess.CalledProcessError as e:
         click.echo(f"Error occurred running Artisan command: {e}", err=True)
+
 
 if __name__ == '__main__':
     laravel()

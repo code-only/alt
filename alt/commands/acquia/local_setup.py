@@ -1,5 +1,7 @@
-import click
 import subprocess
+
+import click
+
 
 @click.command()
 def local_setup_command():

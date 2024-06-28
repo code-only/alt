@@ -1,13 +1,16 @@
 import os
-from click.testing import CliRunner
-import pytest
 import shutil
 
+import pytest
+from click.testing import CliRunner
+
 from alt.cli import cli
+
 
 @pytest.fixture
 def runner():
     return CliRunner()
+
 
 @pytest.fixture
 def mock_config():
@@ -22,19 +25,23 @@ enabled_commands:
     yield
     shutil.rmtree('.alt')
 
+
 def test_cli_help(runner, mock_config):
     result = runner.invoke(cli, ['--help'])
     assert result.exit_code == 0
     assert 'Advanced Local development Tool!' in result.output
+
 
 def test_drupal_command_is_loaded(runner, mock_config):
     result = runner.invoke(cli, ['drupal', '--help'])
     assert result.exit_code == 0
     assert 'Commands related to Drupal CMS' in result.output
 
+
 def test_wordpress_command_is_not_loaded(runner, mock_config):
     result = runner.invoke(cli, ['wordpress', '--help'])
     assert result.exit_code == 2  # Error code for command not found
+
 
 def test_custom_command_loading(runner, mock_config):
     os.makedirs('.alt/commands', exist_ok=True)
@@ -49,6 +56,7 @@ def custom_command():
     result = runner.invoke(cli, ['custom_command'])
     assert result.exit_code == 0
     assert 'Running custom command.' in result.output
+
 
 def test_custom_shell_command_loading(runner, mock_config):
     os.makedirs('.alt/commands', exist_ok=True)

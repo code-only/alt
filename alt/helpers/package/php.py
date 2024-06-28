@@ -1,6 +1,7 @@
 import platform
 import subprocess
 
+
 def is_php_installed():
     """Check if PHP is installed."""
     try:
@@ -8,6 +9,7 @@ def is_php_installed():
         return result.returncode == 0
     except FileNotFoundError:
         return False
+
 
 def install_php(version="latest"):
     """Install PHP depending on the platform, with an optional version."""
@@ -29,6 +31,7 @@ def install_php(version="latest"):
         print(f"Failed to install PHP: {e}")
         return False
 
+
 def is_php_extension_installed(extension_name):
     """Check if a PHP extension is installed."""
     try:
@@ -38,6 +41,7 @@ def is_php_extension_installed(extension_name):
     except subprocess.CalledProcessError as e:
         print(f"Failed to check PHP extension {extension_name}: {e}")
         return False
+
 
 def install_php_extension(extension_name):
     """Install a PHP extension depending on the platform."""
@@ -52,6 +56,7 @@ def install_php_extension(extension_name):
         print(f"Failed to install PHP extension {extension_name}: {e}")
         return False
 
+
 def ensure_php_installed():
     """Ensure PHP is installed."""
     if not is_php_installed():
@@ -62,6 +67,7 @@ def ensure_php_installed():
             print("Failed to install PHP.")
     else:
         print("PHP is already installed.")
+
 
 def ensure_php_extension_installed(extension_name):
     """Ensure PHP extension is installed; install if it's not."""

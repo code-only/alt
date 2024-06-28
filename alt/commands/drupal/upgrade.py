@@ -1,7 +1,11 @@
-import click
 import os
 import subprocess
+
+import click
+
 from alt.helpers.package import composer
+
+
 @click.command()
 @click.argument('version')
 def upgrade(version):

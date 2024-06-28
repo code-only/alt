@@ -1,6 +1,9 @@
-import click
-from alt.helpers.package import composer
 import subprocess
+
+import click
+
+from alt.helpers.package import composer
+
 
 @click.group()
 def add():
@@ -46,6 +49,7 @@ def module(module_names, with_dependencies):
         except subprocess.CalledProcessError:
             click.echo(f"Failed to install module: {module_name}", err=True)
 
+
 @add.command()
 @click.argument('package')
 @click.argument('patch')
@@ -65,11 +69,11 @@ def patch(package, patch, description):
     if not patch or not description:
         click.echo("Both patch and description are required.")
         return
-    
+
     if composer.is_patch_installed(package, patch):
         click.echo("Patch already added.")
         return
-    
+
     """Install Patch"""
     if not composer.is_package_installed("cweagans/composer-patches"):
         composer.add_package("cweagans/composer-patches", "~1.0", with_dependencies=True)
@@ -77,8 +81,9 @@ def patch(package, patch, description):
         composer.add_patch(package, description, patch)
         composer.update_lock()
     except subprocess.CalledProcessError:
-        click.echo(f"Failed to add patch in: {package}", err=True)    
-   
+        click.echo(f"Failed to add patch in: {package}", err=True)
+
+
 if __name__ == '__main__':
     add()
     """Install Patch"""
@@ -87,26 +92,27 @@ if __name__ == '__main__':
     try:
         composer.add_patch(package, patch, description)
     except subprocess.CalledProcessError:
-        click.echo(f"Failed to add patch in: {package}", err=True)    
-   
+        click.echo(f"Failed to add patch in: {package}", err=True)
 
 import datetime
+
 
 def some_example():
     """Print today's date, time, and year."""
 
     # Get the current date and time
     now = datetime.datetime.now()
-    
+
     # Extract the date, time, and year
     current_date = now.date()
     current_time = now.time()
     current_year = now.year
-    
+
     # Print the date, time, and year
     print(f"Today's date: {current_date}")
     print(f"Current time: {current_time}")
     print(f"Current year: {current_year}")
+
 
 if __name__ == '__main__':
     add()
