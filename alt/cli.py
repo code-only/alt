@@ -5,21 +5,28 @@ import yaml
 import subprocess
 from rich.console import Console
 from alt.commands import *
-
+from alt.helpers import load_custom_commands
 
 console = Console()
 
 def load_config():
-    # Check for local config file in current directory
-    local_config_path = os.path.join(os.getcwd(), '.alt', 'config.yaml')
-    default_config_path = os.path.join(os.path.dirname(__file__), '..', 'config.yaml')
+    # Define config paths
+    paths = [
+        os.path.join(os.path.dirname(__file__), '..', 'config'),  # Lowest priority without extension
+        os.path.expanduser('~/.alt/config'),            # Middle priority without extension
+        os.path.join(os.getcwd(), '.alt', 'config')     # Highest priority without extension
+    ]
     
-    config_path = local_config_path if os.path.exists(local_config_path) else default_config_path
-    
-    if os.path.exists(config_path):
-        with open(config_path, 'r') as f:
-            return yaml.safe_load(f)
-    return {}
+    config = {}
+    for base_path in paths:
+        for ext in ['.yaml', '.yml']:
+            path = base_path + ext
+            if os.path.exists(path):
+                with open(path, 'r') as f:
+                    new_config = yaml.safe_load(f)
+                    config.update(new_config or {})
+                    print(config)
+    return config
 
 # Load user configuration
 config = load_config()
@@ -32,10 +39,11 @@ def cli():
     ███████║██║     ██║   
     ██╔══██║██║     ██║   
     ██║  ██║███████╗██║   
-    ╚═╝  ╚═╝╚══════╝╚═╝ [/bold yellow]"""
+    ╚═╝  ╚═╝╚══════╝╚═╝ 
+    [/bold yellow]"""
 
     console.print(banner)          
-    console.print(f"[bold green]    Advanced Local Toolkit![/bold green]")
+    console.print(f"[bold yellow]    Advanced Local Toolkit![/bold yellow]")
     pass
 
 commands = [
@@ -51,34 +59,9 @@ for command, default_enabled in commands:
     if config.get('enabled_commands', {}).get(command, default_enabled):
         cli.add_command(locals()[command])
 
-# Custom command loader
-# Scans `.alt/commands` directory for .py or .sh scripts to load as commands.
-def load_custom_commands(cli_group):
-    custom_command_path = os.path.join(os.getcwd(), '.alt', 'commands')
-    if not os.path.exists(custom_command_path):
-        return
-    
-    for filename in os.listdir(custom_command_path):
-        if filename.endswith('.py'):
-            # Import Python script as module
-            command_module = {}
-            exec(open(os.path.join(custom_command_path, filename)).read(), command_module)
-            cli_group.add_command(command_module[filename[:-3]])
-        elif filename.endswith('.sh'):
-            command_name = filename[:-3]
-            
-            @cli.command(name=command_name)
-            @click.pass_context
-            def shell_command(ctx, cmd_name=command_name):
-                """Run custom shell command."""
-                result = subprocess.run([os.path.join(custom_command_path, f"{cmd_name}.sh")], shell=True)
-                if result.returncode != 0:
-                    click.echo(f'{cmd_name} failed.')
-                else:
-                    click.echo(f'{cmd_name} executed successfully.')
-
 if config.get('enabled_commands', {}).get('custom', True):  # Default to True
+    load_custom_commands(cli, os.path.expanduser('~'))
     load_custom_commands(cli)
 
 if __name__ == '__main__':
-    cli('--help'.split())
+    cli()

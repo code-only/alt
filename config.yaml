@@ -1,6 +1,6 @@
 enabled_commands:
   drupal: true
-  wordpress: false
+  wordpress: true
   magento: false
   custom: true
   laravel: false

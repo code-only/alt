@@ -1,7 +1,7 @@
 import click
 from rich.console import Console
 import subprocess
-
+from alt.helpers.package import composer
 console = Console()
 
 @click.command()
@@ -21,6 +21,7 @@ def new_command(version, folder):
     create_new_drupal(version, folder)
 
 def create_new_drupal(version, folder):
+    composer.ensure_composer_installed()
     console.print(f"[bold blue]Installing Drupal {version}...[/bold blue]")
     # Compose the Composer create-project command
     composer_command = [
