@@ -1,3 +1,5 @@
 __pycache__
 alt_cli.egg-info/
 .pytest_cache/
+docs/_build
+
