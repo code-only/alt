@@ -47,6 +47,11 @@ def install_php_extension(extension_name):
     """Install a PHP extension depending on the platform."""
     try:
         os_name = platform.system().lower()
+
+        # Remove 'ext-' prefix if it exists
+        if extension_name.startswith("ext-"):
+            extension_name = extension_name[4:]
+
         if 'darwin' in os_name:
             subprocess.run(["brew", "install", f"php-{extension_name}"], check=True)
         elif 'linux' in os_name:

@@ -2,8 +2,9 @@ import json
 import os
 import re
 import subprocess
-
+from .php import ensure_php_installed, ensure_php_extension_installed
 import click
+import json
 
 
 def is_composer_installed():
@@ -19,12 +20,14 @@ def install_composer():
     """Install Composer globally."""
     install_script_url = "https://getcomposer.org/installer"
     try:
+        ensure_php_installed()
         # Download the installer script
         subprocess.run(["php", "-r", f"copy('{install_script_url}', 'composer-setup.php');"], check=True)
         # Run the installer script
         subprocess.run(["php", "composer-setup.php"], check=True)
         # Move Composer to a global location
         subprocess.run(["php", "-r", "unlink('composer-setup.php');"], check=True)
+        #TODO: This requires elevated previlidges on linux.
         subprocess.run(["mv", "composer.phar", "/usr/local/bin/composer"], check=True)
         return True
     except subprocess.CalledProcessError as e:
@@ -199,8 +202,6 @@ def is_patch_installed(package, patch_url):
     patches_section = composer_data.get('extra', {}).get('patches', {})
     if package in patches_section:
         for patch in patches_section[package]:
-            print(patch)
-            print(patch_url)
             if patch == patch_url:
                 return True
     return False
@@ -221,6 +222,33 @@ def update_lock():
         click.echo("Successfully updated the composer.lock file.")
     except subprocess.CalledProcessError as e:
         click.echo(f"Failed to update the composer.lock file: {e}")
+
+
+def install_missing_requirements():
+    result = subprocess.run(
+        ['composer', 'check-platform-reqs', '--format=json', '--lock'],
+            capture_output=True,
+            text=True
+        )
+
+    # Parse the JSON output
+    requirements = json.loads(result.stdout)
+
+    # Check for missing requirements
+    missing_requirements = [req['name'] for req in requirements if req['status'] == 'missing']
+
+    if missing_requirements:
+        click.echo(f"[bold red]Missing platform requirements detected: {', '.join(missing_requirements)}[/bold red]")
+        # Attempt to install each missing requirement
+        for req in missing_requirements:
+            click.echo(f"[bold blue]Attempting to install missing requirement: {req}[/bold blue]")
+            try:
+                # Install PHP extension if missing
+                ensure_php_extension_installed(req)
+            except subprocess.CalledProcessError as e:
+                click.echo(f"Error occurred while installing {req}: {e}", err=True)
+    else:
+        click.echo("[bold green]All platform requirements are met.[/bold green]")
 
 
 # Example usage
